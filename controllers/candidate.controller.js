@@ -6,7 +6,7 @@ import Employee from "../models/employee.model.js";
 export const createCandidate = async (req, res) => {
   try {
     const { name, email, phone, position, experience } = req.body;
-    const resumeUrl = req.file?.path;
+    const resumeUrl = req.file?.path; 
     const candidate = await Candidate.create({
       name,
       email,

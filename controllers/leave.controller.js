@@ -27,7 +27,7 @@ export const getLeaves = async (req, res) => {
 
 export const addLeave = async (req, res) => {
   try {
-    const { employeeId, date, reason, docUrl } = req.body;
+    const { employeeId, date, reason } = req.body;
 
     const employee = await Employee.findById(employeeId);
     if (!employee || employee.status !== "present") {
@@ -36,19 +36,27 @@ export const addLeave = async (req, res) => {
         .json({ message: "Employee not eligible for leave" });
     }
 
+    const docUrl = req.file?.path; 
+
     const newLeave = new Leave({ employeeId, date, reason, docUrl });
     await newLeave.save();
 
-    res.status(201).json({ message: "Leave applied", leave: newLeave });
+    res
+      .status(201)
+      .json({ message: "Leave applied successfully", leave: newLeave });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Leave apply error:", err);
+    res.status(500).json({ error: "Server error while applying leave" });
   }
 };
+
 
 export const updateLeaveStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+
+    console.log(req.body,id)
 
     const leave = await Leave.findByIdAndUpdate(id, { status }, { new: true });
     if (!leave) return res.status(404).json({ message: "Leave not found" });

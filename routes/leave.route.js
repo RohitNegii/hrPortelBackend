@@ -6,12 +6,13 @@ import {
   getApprovedLeaves,
   getPresentEmployees,
 } from "../controllers/leave.controller.js"
+import upload from "../middleware/upload.js";
 
 const leaveRoutes = express.Router();
 
 leaveRoutes.get("/", getLeaves);
-leaveRoutes.post("/", addLeave);
-leaveRoutes.put("/:id", updateLeaveStatus);
+leaveRoutes.post("/", upload.single("doc"), addLeave);
+leaveRoutes.patch("/:id", updateLeaveStatus);
 leaveRoutes.get("/approved", getApprovedLeaves);
 leaveRoutes.get("/employee", getPresentEmployees);
 
